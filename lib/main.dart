@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/Routes/route.dart';
 import 'package:movies_app/Screens/HomeScreen/Home.dart';
-import 'package:movies_app/Screens/LogIn_Screen/logIn.dart';
+
 import 'package:movies_app/Screens/OnBoarding%20Screen/onBoarding_screen.dart';
 import 'package:movies_app/Screens/OnBoarding%20Screen/onboardingPosters.dart';
-import 'package:movies_app/core/AppTheme/Theme.dart';
+import 'package:movies_app/core/AppTheme/Theme.dart' as AppTheme;
 
+
+import 'Screens/LogIn_Screen/logIn.dart';
+import 'Screens/register.dart';
 import 'core/cach/shared_preferences.dart';
 
 void main() async{
@@ -32,7 +35,8 @@ class MyApp extends StatelessWidget {
         AppRoute.OnBoarding.name: (context) => OnBoarding(),
         AppRoute.OnboardingPosters.name: (context) => OnboardingPosters(),
         AppRoute.Home.name: (context) => Home(),
-        AppRoute.LogIn.name: (context) => LogIn(),
+        AppRoute.LogIn.name: (context) => LoginScreen(),
+        AppRoute.register.name: (context) => RegisterScreen(),
       },
       debugShowCheckedModeBanner: false,
     );
