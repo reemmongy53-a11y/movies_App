@@ -1,279 +1,401 @@
 import 'package:flutter/material.dart';
-import '../core/AppTheme/Theme.dart';
-
+import 'package:easy_localization/easy_localization.dart';
+import 'package:provider/provider.dart';
+import '../customWidget/custom_text_field.dart';
+import '../customWidget/language_switch.dart';
+import '../services/app_service.dart';
+import 'Login_Screen/login.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
-  bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
-  bool _isEgyptianLanguage = true;
-
-  int _selectedAvatar = 0;
-
-  final List<String> _avatarPaths = const [
+  final List<String> avatars = [
     'assets/images/avatar.png',
     'assets/images/avatar2.png',
     'assets/images/avatar3.png',
   ];
 
-  Widget _buildAvatar({
-    required String path,
-    required int index,
-    required double size,
-  }) {
-    final bool isSelected = (_selectedAvatar == index);
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedAvatar = index;
-        });
-      },
-      child: Container(
-        width: size,
-        height: size,
-        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
+  String? _selectedAvatar;
 
-          color: isSelected ? primaryYellow.withOpacity(0.2) : inputFieldColor,
-          border: isSelected
-              ? Border.all(color: primaryYellow, width: 4)
-              : Border.all(color: Colors.transparent, width: 4),
-        ),
-        child: Center(
-          child: Image.asset(
-            path,
-            width: size * 0.5,
-            height: size * 0.5,
+  @override
+  Widget build(BuildContext context) {
+    final appService = Provider.of<AppService>(context);
+    final isArabic = appService.isArabic;
 
-            errorBuilder: (context, error, stackTrace) {
-              return Icon(Icons.person, size: size * 0.5, color: primaryYellow);
-            },
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Color(0xFFFFBB3B)),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Text(
+                      'register'.tr(),
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFFFBB3B),
+                      ),
+                    ),
+                    const SizedBox(width: 40),
+                  ],
+                ),
+
+                const SizedBox(height: 30),
+
+                Column(
+                  children: [
+                    Text(
+                      'choose_avatar'.tr(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    if (_selectedAvatar != null)
+                      Column(
+                        children: [
+                          Stack(
+                            children: [
+                              Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: const Color(0xFFFFBB3B),
+                                    width: 3,
+                                  ),
+                                ),
+                                child: ClipOval(
+                                  child: Image.asset(
+                                    _selectedAvatar!,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: isArabic ? null : 0,
+                                left: isArabic ? 0 : null,
+                                child: GestureDetector(
+                                  onTap: _removeAvatar,
+                                  child: Container(
+                                    width: 30,
+                                    height: 30,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.red,
+                                    ),
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'selected_avatar'.tr(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: avatars.map((avatar) {
+                        return GestureDetector(
+                          onTap: () => _selectAvatar(avatar),
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: _selectedAvatar == avatar
+                                    ? const Color(0xFFFFBB3B)
+                                    : Colors.grey[700]!,
+                                width: _selectedAvatar == avatar ? 3 : 2,
+                              ),
+                            ),
+                            child: ClipOval(
+                              child: Image.asset(
+                                avatar,
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+
+
+                const SizedBox(height: 30),
+
+                CustomTextField(
+                  controller: _nameController,
+                  hintText: 'name'.tr(),
+                  prefixIcon: Icons.person,
+                  isRTL: isArabic,
+                  backgroundColor: const Color(0xff121312),
+                  textColor: Colors.white,
+                  cursorColor: Colors.white,
+                  hintColor: Colors.grey[500]!,
+                  iconColor: Colors.grey[500]!,
+                ),
+
+                const SizedBox(height: 15),
+
+
+                CustomTextField(
+                  controller: _emailController,
+                  hintText: 'email'.tr(),
+                  prefixIcon: Icons.email,
+                  isRTL: isArabic,
+                  keyboardType: TextInputType.emailAddress,
+                  backgroundColor: const Color(0xff121312),
+                  textColor: Colors.white,
+                  cursorColor: Colors.white,
+                  hintColor: Colors.grey[500]!,
+                  iconColor: Colors.grey[500]!,
+                ),
+
+                const SizedBox(height: 15),
+
+
+                CustomTextField(
+                  controller: _passwordController,
+                  hintText: 'password'.tr(),
+                  prefixIcon: Icons.lock,
+                  isRTL: isArabic,
+                  isPassword: true,
+                  backgroundColor: const Color(0xff121312),
+                  textColor: Colors.white,
+                  cursorColor: Colors.white,
+                  hintColor: Colors.grey[500]!,
+                  iconColor: Colors.grey[500]!,
+                  validator: (value) {
+                    if (value == null || value.isEmpty){
+                      return 'password_required'.tr();
+                    }
+                    if (value.length < 6){
+                      return 'password_min_length'.tr();
+                    }
+                    if (!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)').hasMatch(value)) {
+                      return 'password_strength'.tr();
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+                CustomTextField(
+                  controller: _confirmPasswordController,
+                  hintText: 'confirm password'.tr(),
+                  prefixIcon: Icons.lock,
+                  isRTL: isArabic,
+                  isPassword: true,
+                  backgroundColor: const Color(0xff121312),
+                  textColor: Colors.white,
+                  cursorColor: Colors.white,
+                  hintColor: Colors.grey[500]!,
+                  iconColor: Colors.grey[500]!,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'confirm_password_required'.tr();
+                    }
+                    if (value != _passwordController.text) {
+                      return 'passwords_not_match'.tr();
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+
+                CustomTextField(
+                  controller: _phoneController,
+                  hintText: 'phone number'.tr(),
+                  prefixIcon: Icons.phone,
+                  isRTL: isArabic,
+                  keyboardType: TextInputType.phone,
+                  backgroundColor: const Color(0xff121312),
+                  textColor: Colors.white,
+                  cursorColor: Colors.white,
+                  hintColor: Colors.grey[500]!,
+                  iconColor: Colors.grey[500]!,
+                ),
+
+                const SizedBox(height: 30),
+
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: _register,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFBB3B),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      'Create Account'.tr(),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginScreen()),
+                    );
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                      children: [
+                        TextSpan(text: '${'Already Have Account ?'.tr()} '),
+                        TextSpan(
+                          text: 'Login'.tr(),
+                          style: const TextStyle(
+                            color: Color(0xFFFFBB3B),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+
+                const SizedBox(height: 50),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1E1E1E),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        'switch_language'.tr(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      const LanguageSwitch(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildLanguageToggle() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-
-            const Text('🇪🇬', style: TextStyle(fontSize: 30)),
-            Switch(
-              value: _isEgyptianLanguage,
-              onChanged: (bool value) {
-                setState(() {
-                  _isEgyptianLanguage = value;
-                });
-              },
-              activeColor: primaryYellow,
-              inactiveThumbColor: primaryYellow,
-              inactiveTrackColor: inputFieldColor,
-              activeTrackColor: inputFieldColor,
-            ),
-
-            const Text('🇺🇸', style: TextStyle(fontSize: 30)),
-          ],
-        ),
-
-        const SizedBox(height: 5),
-        Text(
-          _isEgyptianLanguage ? 'اللغة: العربية (مفعلة)' : 'Language: English (Active)',
-          style: TextStyle(color: _isEgyptianLanguage ? primaryYellow : Colors.white54, fontSize: 14),
-        ),
-      ],
-    );
+  void _selectAvatar(String avatar) {
+    setState(() {
+      _selectedAvatar = avatar;
+    });
   }
 
+  void _removeAvatar() {
+    setState(() {
+      _selectedAvatar = null;
+    });
+  }
 
-  Widget _buildSelectedAvatarDisplay() {
+  void _register() {
+    if (_formKey.currentState!.validate()) {
+      if (_selectedAvatar == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('select_avatar_required'.tr())),
+        );
+        return;
+      }
 
-    final String selectedPath = _avatarPaths[_selectedAvatar];
 
-    return Container(
-      width: 120,
-      height: 120,
-      margin: const EdgeInsets.only(bottom: 30.0),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: inputFieldColor,
-        border: Border.all(color: primaryYellow, width: 4),
-      ),
-      child: Center(
+      if (_passwordController.text != _confirmPasswordController.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('passwords_not_match'.tr())),
+        );
+        return;
+      }
 
-        child: Image.asset(
-          selectedPath,
-          width: 70,
-          height: 70,
-
-          errorBuilder: (context, error, stackTrace) {
-            return const Icon(
-              Icons.person,
-              size: 70,
-              color: primaryYellow,
-            );
-          },
-        ),
-      ),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('creating_account'.tr())),
+      );
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: darkBackground,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text('Register', style: TextStyle(color: Colors.white)),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          children: <Widget>[
-
-            _buildSelectedAvatarDisplay(),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildAvatar(
-                  path: _avatarPaths[0],
-                  index: 0,
-                  size: 70.0,
-                ),
-                _buildAvatar(
-                  path: _avatarPaths[1],
-                  index: 1,
-                  size: 70.0,
-                ),
-                _buildAvatar(
-                  path: _avatarPaths[2],
-                  index: 2,
-                  size: 70.0,
-                ),
-              ],
-            ),
-            const Text('Choose Avatar', style: TextStyle(color: Colors.white54)),
-            const SizedBox(height: 30.0),
-
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: 'Name',
-                prefixIcon: Icon(Icons.person, color: primaryYellow),
-              ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 20.0),
-
-            TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                hintText: 'Email',
-                prefixIcon: Icon(Icons.email, color: primaryYellow),
-              ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 20.0),
-
-            TextFormField(
-              obscureText: !_isPasswordVisible,
-              decoration: InputDecoration(
-                hintText: 'Password',
-                prefixIcon: const Icon(Icons.lock, color: primaryYellow),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.white54,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                ),
-              ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 20.0),
-
-            TextFormField(
-              obscureText: !_isConfirmPasswordVisible,
-              decoration: InputDecoration(
-                hintText: 'Confirm Password',
-                prefixIcon: const Icon(Icons.lock, color: primaryYellow),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.white54,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                    });
-                  },
-                ),
-              ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 20.0),
-
-            TextFormField(
-              keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(
-                hintText: 'Phone Number',
-                prefixIcon: Icon(Icons.phone, color: primaryYellow),
-              ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 30.0),
-
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Create Account'),
-            ),
-            const SizedBox(height: 20.0),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text("Already Have Account ? ", style: TextStyle(color: Colors.white)),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
-                      color: primaryYellow,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 40.0),
-
-            _buildLanguageToggle(),
-            const SizedBox(height: 20.0),
-          ],
-        ),
-      ),
-    );
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _phoneController.dispose();
+    super.dispose();
   }
 }
