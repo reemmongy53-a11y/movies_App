@@ -7,8 +7,8 @@ abstract class AppImage{
   static const String onboarding5 = "assets/images/1917_-_Sam_Mendes_-_Hollywood_War_Film_Classic_English_Movie_Poster_9ef86295-4756-4c71-bb4e-20745c5fbc1a 1.png";
   static const String  usa = "assets/images/usa.png";
   static const String  logo = "assets/images/logo.png";
-  static const String  eg = "assets/images/eg.png";
-  static const String  avatar = "assets/images/avatar.png";
+  static const String  eg = "assets/images/egypt.png";
+  static const String  avatar = "assets/images/avatar1.png";
   static const String  avatar2 = "assets/images/avatar2.png";
   static const String  avatar3 = "assets/images/avatar3.png";
 

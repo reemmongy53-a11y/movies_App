@@ -16,10 +16,10 @@ class linearGradient extends StatelessWidget {
     super.key,
     required this.startColor,
     required this.endColor,
-     this.primaryColor=Colors.white,
-     this.primaryOpacity=0.0,
+    this.primaryColor=Colors.white,
+    this.primaryOpacity=0.0,
     required this.startOpacity ,
-   required this.endOpacity,
+    required this.endOpacity,
     this.begin = Alignment.topCenter,
     this.end = Alignment.bottomCenter,
   });
