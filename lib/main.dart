@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'Screens/EditProfileScreen/edit_profile.dart';
+import 'Screens/HistoryScreen/history.dart';
+import 'Screens/HomeScreen/home.dart';
 import 'Screens/LoginScreen/login.dart';
-
+import 'Screens/ProfileScreen/profile.dart';
+import 'Screens/RegisterScreen/register.dart';
 
 void main() {
-  runApp(const MoviesApp());
+  runApp(MyApp());
 }
 
-class MoviesApp extends StatelessWidget {
-  const MoviesApp({Key? key}) : super(key: key);
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,13 +18,19 @@ class MoviesApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF1A1A1A),
-        primaryColor: const Color(0xFFF5C518),
+        primaryColor: Color(0xFFFFB800),
+        scaffoldBackgroundColor: Colors.black,
+        fontFamily: 'Roboto',
       ),
-      home: const LoginScreen(),
-
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
+        '/home': (context) => HomeScreen(),
+        '/profile': (context) => ProfileScreen(),
+        '/history': (context) => HistoryScreen(),
+        '/editProfile': (context) => EditProfileScreen(),
+      },
     );
   }
 }
-
-

@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../ProfileScreen/profile.dart';
 import '../RegisterScreen/register.dart';
+import '../user_database.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -15,56 +17,154 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
   bool _isArabic = false;
 
+  void _login() {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_isArabic
+              ? 'من فضلك أدخل البريد الإلكتروني وكلمة المرور'
+              : 'Please enter email and password'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_isArabic
+              ? 'من فضلك أدخل بريد إلكتروني صحيح'
+              : 'Please enter a valid email'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    var user = UserDatabase.users.firstWhere(
+      (u) => u['email'] == email && u['password'] == password,
+      orElse: () => {},
+    );
+
+    if (user.isNotEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfileScreen(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_isArabic
+              ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
+              : 'Invalid email or password'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
               const SizedBox(height: 40),
-              Image.asset(
-                'assets/images/logo.png',
+              Container(
                 width: 120,
                 height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: 90,
+                          height: 90,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFFFFBF00),
+                              width: 3,
+                            ),
+                          ),
+                        ),
+                        const Icon(
+                          Icons.play_arrow_rounded,
+                          size: 70,
+                          color: Color(0xFFFFBF00),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
-              const SizedBox(height: 60),
-
+              const SizedBox(height: 50),
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2C2C2C),
+                  color: const Color(0xFF2D2D2D),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: TextField(
                   controller: _emailController,
                   style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.email_outlined, color: Colors.white70),
-                    hintText: 'Email',
-                    hintStyle: TextStyle(color: Colors.white54),
+                  keyboardType: TextInputType.emailAddress,
+                  textDirection:
+                      _isArabic ? TextDirection.rtl : TextDirection.ltr,
+                  decoration: InputDecoration(
+                    hintText: _isArabic ? 'البريد الإلكتروني' : 'Email',
+                    hintStyle: TextStyle(color: Colors.grey[600]),
+                    prefixIcon: const Icon(
+                      Icons.email_outlined,
+                      color: Colors.white,
+                    ),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(16),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 18,
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-
+              const SizedBox(height: 20),
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2C2C2C),
+                  color: const Color(0xFF2D2D2D),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: TextField(
                   controller: _passwordController,
-                  obscureText: _obscurePassword,
                   style: const TextStyle(color: Colors.white),
+                  obscureText: _obscurePassword,
+                  textDirection:
+                      _isArabic ? TextDirection.rtl : TextDirection.ltr,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.lock_outline, color: Colors.white70),
+                    hintText: _isArabic ? 'كلمة المرور' : 'Password',
+                    hintStyle: TextStyle(color: Colors.grey[600]),
+                    prefixIcon: const Icon(
+                      Icons.lock_outline,
+                      color: Colors.white,
+                    ),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                        color: Colors.white70,
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: Colors.white,
                       ),
                       onPressed: () {
                         setState(() {
@@ -72,114 +172,139 @@ class _LoginScreenState extends State<LoginScreen> {
                         });
                       },
                     ),
-                    hintText: 'Password',
-                    hintStyle: const TextStyle(color: Colors.white54),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.all(16),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 18,
+                    ),
                   ),
                 ),
               ),
-
+              const SizedBox(height: 10),
               Align(
-                alignment: Alignment.centerRight,
+                alignment:
+                    _isArabic ? Alignment.centerLeft : Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {},
-                  child: const Text(
-                    'Forget Password ?',
-                    style: TextStyle(color: Color(0xFFF5C518)),
+                  child: Text(
+                    _isArabic ? 'نسيت كلمة المرور؟' : 'Forget Password ?',
+                    style: const TextStyle(
+                      color: Color(0xFFFFBF00),
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),
-
-              const SizedBox(height: 8),
-
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
-                height: 56,
+                height: 55,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ProfileScreen()),
-                    );
-                  },
+                  onPressed: _login,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF5C518),
+                    backgroundColor: const Color(0xFFFFBF00),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    elevation: 0,
                   ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
-                      color: Color(0xFF1A1A1A),
+                  child: Text(
+                    _isArabic ? 'تسجيل الدخول' : 'Login',
+                    style: const TextStyle(
+                      color: Colors.black,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-
-              const SizedBox(height: 16),
-
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Don't Have Account ? ",
-                    style: TextStyle(color: Colors.white70),
+                  Text(
+                    _isArabic ? 'ليس لديك حساب؟ ' : "Don't Have Account ? ",
+                    style: const TextStyle(color: Colors.white70),
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              RegisterScreen(isArabic: _isArabic),
+                        ),
                       );
                     },
-                    child: const Text(
-                      'Create One',
-                      style: TextStyle(
-                        color: Color(0xFFF5C518),
+                    child: Text(
+                      _isArabic ? 'إنشاء حساب' : 'Create One',
+                      style: const TextStyle(
+                        color: Color(0xFFFFBF00),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ],
               ),
-
-              const SizedBox(height: 24),
-
+              const SizedBox(height: 30),
               Row(
-                children: const [
-                  Expanded(child: Divider(color: Colors.white30)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('OR', style: TextStyle(color: Color(0xFFF5C518))),
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      color: Colors.grey[700],
+                    ),
                   ),
-                  Expanded(child: Divider(color: Colors.white30)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                      _isArabic ? 'أو' : 'OR',
+                      style: const TextStyle(
+                        color: Color(0xFFFFBF00),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      color: Colors.grey[700],
+                    ),
+                  ),
                 ],
               ),
-
-              const SizedBox(height: 24),
+              const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
-                height: 56,
-                child: OutlinedButton.icon(
+                height: 55,
+                child: ElevatedButton.icon(
                   onPressed: () {},
-                  icon: const Icon(Icons.g_mobiledata, size: 32),
-                  label: const Text('Login With Google'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF1A1A1A),
-                    backgroundColor: const Color(0xFFF5C518),
-                    side: const BorderSide(color: Color(0xFFF5C518)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFFBF00),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
+                  ),
+                  icon: const Text(
+                    'G',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  label: Text(
+                    _isArabic ? 'تسجيل الدخول بجوجل' : 'Login With Google',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
               ),
-
-              const SizedBox(height: 24),
+              const SizedBox(height: 30),
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -187,43 +312,101 @@ class _LoginScreenState extends State<LoginScreen> {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  width: 100,
+                  height: 50,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2C2C2C),
-                    borderRadius: BorderRadius.circular(20),
+                    color: const Color(0xFF2D2D2D),
+                    borderRadius: BorderRadius.circular(25),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                  child: Stack(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: !_isArabic ? const Color(0xFFF5C518) : Colors.transparent,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Image.asset(
-                          'assets/images/usa.png',
-                          width: 24,
-                          height: 24,
+                      AnimatedAlign(
+                        duration: const Duration(milliseconds: 300),
+                        alignment: _isArabic
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFFFBF00),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: ClipOval(
+                              child: Image.asset(
+                                _isArabic
+                                    ? 'assets/images/egypt_flag.png'
+                                    : 'assets/images/usa_flag.png',
+                                width: 30,
+                                height: 30,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Text(
+                                    _isArabic ? '🇪🇬' : '🇺🇸',
+                                    style: const TextStyle(fontSize: 24),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 4),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: _isArabic ? const Color(0xFFF5C518) : Colors.transparent,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Image.asset(
-                          'assets/images/egypt.png',
-                          width: 24,
-                          height: 24,
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: ClipOval(
+                                child: Image.asset(
+                                  'assets/images/usa_flag.png',
+                                  width: 30,
+                                  height: 30,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Text(
+                                      '🇺🇸',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        color: !_isArabic
+                                            ? Colors.transparent
+                                            : Colors.white,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: ClipOval(
+                                child: Image.asset(
+                                  'assets/images/egypt_flag.png',
+                                  width: 30,
+                                  height: 30,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Text(
+                                      '🇪🇬',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        color: _isArabic
+                                            ? Colors.transparent
+                                            : Colors.white,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ),
+              const SizedBox(height: 40),
             ],
           ),
         ),

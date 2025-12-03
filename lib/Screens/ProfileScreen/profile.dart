@@ -1,281 +1,446 @@
 import 'package:flutter/material.dart';
-import '../EditProfileScreen/edit_profile.dart';
-import '../HistoryScreen/history.dart';
-import '../LoginScreen/login.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
-
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  int _selectedTab = 0;
+class _ProfileScreenState extends State<ProfileScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  int _selectedBottomIndex = 3;
+
+  String userName = 'John Safwat';
+  String userPhone = '01200000000';
+  int userAvatar = 0;
+
+  final List<String> _avatarPaths = [
+    'assets/images/avatar1.png',
+    'assets/images/avatar2.png',
+    'assets/images/avatar3.png',
+    'assets/images/avatar4.png',
+    'assets/images/avatar5.png',
+    'assets/images/avatar6.png',
+    'assets/images/avatar7.png',
+    'assets/images/avatar8.png',
+    'assets/images/avatar9.png',
+  ];
+
+  final String popcornImage = 'assets/images/popcorn.png';
+
+  final List<Map<String, dynamic>> _movies = [
+    {
+      'title': 'Black Widow',
+      'rating': 7.7,
+      'image': 'assets/images/black_widow.png'
+    },
+    {
+      'title': ' Fast Furious',
+      'rating': 7.7,
+      'image': 'assets/images/fast_furious.png'
+    },
+    {'title': 'Titans', 'rating': 7.7, 'image': 'assets/images/titans.png'},
+    {'title': 'Avengers', 'rating': 7.7, 'image': 'assets/images/avengers.png'},
+    {
+      'title': 'Avengers Endgame',
+      'rating': 7.7,
+      'image': 'assets/images/endgame.png'
+    },
+    {
+      'title': '1917',
+      'rating': 7.7,
+      'image': 'assets/images/1917.png'
+    },
+    {
+      'title': 'Black Panther',
+      'rating': 7.7,
+      'image': 'assets/images/black_panther.png'
+    },
+    {
+      'title': 'wednesday',
+      'rating': 7.7,
+      'image': 'assets/images/wednesday.png'
+    },
+    {
+      'title': 'Doctor Who',
+      'rating': 7.7,
+      'image': 'assets/images/doctor_who.png'
+    },
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)?.settings.arguments as Map?;
+      if (args != null) {
+        setState(() {
+          userName = args['name'] ?? userName;
+          userPhone = args['phone'] ?? userPhone;
+          userAvatar = args['avatar'] ?? userAvatar;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _onBottomItemTapped(int index) {
+    setState(() => _selectedBottomIndex = index);
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(context, '/home');
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              Row(
+        child: Column(
+          children: [
+            SizedBox(height: 24),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFFF5C518), width: 2),
                     ),
                     child: ClipOval(
                       child: Image.asset(
-                        'assets/images/avatar2.png',
+                        _avatarPaths[userAvatar],
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
-
+                  SizedBox(width: 16),
                   Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildStatItem('12', 'Wish List'),
-                        _buildStatItem('10', 'History'),
+                        Text(
+                          userName,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                        Row(
+                          children: [
+                            _buildStat('12', 'Wish List'),
+                            SizedBox(width: 32),
+                            _buildStat('10', 'History'),
+                          ],
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
-
-              const SizedBox(height: 12),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'John Safwat',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-              Row(
+            ),
+            SizedBox(height: 24),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        final result = await Navigator.pushNamed(
                           context,
-                          MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+                          '/editProfile',
+                          arguments: {
+                            'name': userName,
+                            'phone': userPhone,
+                            'avatar': userAvatar,
+                          },
                         );
+
+                        if (result != null && result is Map) {
+                          setState(() {
+                            userName = result['name'] ?? userName;
+                            userPhone = result['phone'] ?? userPhone;
+                            userAvatar = result['avatar'] ?? userAvatar;
+                          });
+                        }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF5C518),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        backgroundColor: Color(0xFFFFB800),
+                        padding: EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Edit Profile',
                         style: TextStyle(
-                          color: Color(0xFF1A1A1A),
+                          color: Colors.black,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const LoginScreen()),
-                      );
+                      Navigator.pushReplacementNamed(context, '/login');
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      backgroundColor: Colors.red[600],
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Text(
                           'Exit',
                           style: TextStyle(
                             color: Colors.white,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 4),
-                        Icon(Icons.exit_to_app, color: Colors.white, size: 20),
+                        SizedBox(width: 6),
+                        Icon(Icons.exit_to_app, color: Colors.white, size: 18),
                       ],
                     ),
                   ),
                 ],
               ),
-
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _selectedTab = 0),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.list, color: Color(0xFFF5C518)),
-                              SizedBox(width: 8),
-                              Text(
-                                'Watch List',
-                                style: TextStyle(
-                                  color: Color(0xFFF5C518),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            height: 3,
-                            decoration: BoxDecoration(
-                              color: _selectedTab == 0 ? const Color(0xFFF5C518) : Colors.transparent,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _selectedTab = 1),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.folder, color: Colors.white54),
-                              SizedBox(width: 8),
-                              Text(
-                                'History',
-                                style: TextStyle(
-                                  color: Colors.white54,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            height: 3,
-                            decoration: BoxDecoration(
-                              color: _selectedTab == 1 ? const Color(0xFFF5C518) : Colors.transparent,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 24),
-
-              Expanded(
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/popcorn.png',
-                    width: 150,
-                    height: 150,
+            ),
+            SizedBox(height: 24),
+            TabBar(
+              controller: _tabController,
+              indicatorColor: Color(0xFFFFB800),
+              indicatorWeight: 3,
+              labelColor: Color(0xFFFFB800),
+              unselectedLabelColor: Colors.grey,
+              tabs: [
+                Tab(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.list, size: 24),
+                      SizedBox(height: 4),
+                      Text('Watch List', style: TextStyle(fontSize: 12)),
+                    ],
                   ),
                 ),
+                Tab(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.folder, size: 24),
+                      SizedBox(height: 4),
+                      Text('History', style: TextStyle(fontSize: 12)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildWatchListTab(),
+                  _buildHistoryTab(),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFF1C1C1C),
+          border: Border(top: BorderSide(color: Colors.grey[900]!, width: 1)),
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: Colors.transparent,
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Color(0xFFFFB800),
+          unselectedItemColor: Colors.grey,
+          currentIndex: _selectedBottomIndex,
+          onTap: _onBottomItemTapped,
+          elevation: 0,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home, size: 28), label: ''),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.search, size: 28), label: ''),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.explore, size: 28), label: ''),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person, size: 28), label: ''),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildStatItem(String count, String label) {
+  Widget _buildStat(String number, String label) {
     return Column(
       children: [
         Text(
-          count,
-          style: const TextStyle(
+          number,
+          style: TextStyle(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: 28,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 12,
-          ),
+          style: TextStyle(color: Colors.grey, fontSize: 12),
         ),
       ],
     );
   }
 
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2C),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 10,
+  Widget _buildWatchListTab() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            popcornImage,
+            width: 150,
+            height: 150,
+            errorBuilder: (context, error, stackTrace) {
+              return Text('🎬🍿', style: TextStyle(fontSize: 80));
+            },
+          ),
+          SizedBox(height: 16),
+          Text(
+            'No items yet',
+            style: TextStyle(color: Colors.grey, fontSize: 16),
           ),
         ],
       ),
-      child: BottomNavigationBar(
-        backgroundColor: Colors.transparent,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFFF5C518),
-        unselectedItemColor: Colors.white54,
-        currentIndex: 3,
-        elevation: 0,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HistoryScreen()),
-            );
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '',
-          ),
-        ],
+    );
+  }
+
+  Widget _buildHistoryTab() {
+    return GridView.builder(
+      padding: EdgeInsets.all(12),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 0.65,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
       ),
+      itemCount: _movies.length,
+      itemBuilder: (context, index) {
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5),
+                blurRadius: 8,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  _movies[index]['image'],
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.grey[900]!, Colors.grey[800]!],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: Center(
+                        child: Icon(Icons.movie,
+                            size: 40, color: Colors.grey[700]),
+                      ),
+                    );
+                  },
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.3),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${_movies[index]['rating']}',
+                          style: TextStyle(
+                            color: Color(0xFFFFB800),
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 2),
+                        Icon(
+                          Icons.star,
+                          color: Color(0xFFFFB800),
+                          size: 11,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
