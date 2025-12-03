@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:movies_app/API/ApiManager.dart';
+import 'package:movies_app/Screens/SearchScreen/Search_cubit.dart';
 import 'package:provider/provider.dart';
 
 import 'package:movies_app/Routes/route.dart';
@@ -9,8 +11,13 @@ import 'package:movies_app/Screens/OnBoarding Screen/onboardingPosters.dart';
 import 'package:movies_app/Screens/LogIn_Screen/logIn.dart';
 import 'package:movies_app/Screens/register.dart';
 
+import 'Screens/BrowseScreen/Browse.dart';
+import 'Screens/Movie Detials/Movie_Detials.dart';
+import 'Screens/ProfileScreen/Profile.dart';
+import 'Screens/SearchScreen/Search.dart';
 import 'core/cach/shared_preferences.dart';
 import 'core/AppTheme/Theme.dart' as AppTheme;
+import 'customWidget/bottomTabs.dart';
 import 'services/app_service.dart';
 
 void main() async {
@@ -57,6 +64,10 @@ class MyApp extends StatelessWidget {
         AppRoute.Home.name: (context) => Home(),
         AppRoute.LogIn.name: (context) => LoginScreen(),
         AppRoute.register.name: (context) => RegisterScreen(),
+        AppRoute.Search.name: (context) => Search(cubit: SearchCubit(ApiManager.getInstence()),),
+        AppRoute.Browse.name: (context) => Browse(),
+        AppRoute.Profile.name: (context) => Profile(),
+        AppRoute.Details.name: (context) => MovieDetailsPage(),
       },
 
       debugShowCheckedModeBanner: false,

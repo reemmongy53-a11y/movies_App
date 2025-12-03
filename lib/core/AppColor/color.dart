@@ -12,6 +12,8 @@ abstract class AppColor{
   static const Color brownishRed = Color(0xFF601321);
   static const Color purple = Color(0xFF4C2471);
   static const Color charcoalGray = Color(0xFF2A2C30);
+  static const Color darkGray = Color(0xFF282A28);
+
 
 
 }
