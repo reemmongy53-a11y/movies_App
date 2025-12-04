@@ -1,0 +1,40 @@
+import 'Data.dart';
+import '@meta.dart';
+
+/// status : "ok"
+/// status_message : "Query was successful"
+/// data : {"movie":{"id":15,"url":"https://yts.lt/movies/16-blocks-2006?idruczs04SYr6Pgn4bvFHN_l-D4","imdb_code":"tt0450232","title":"16 Blocks","title_english":"16 Blocks","title_long":"16 Blocks (2006)","slug":"16-blocks-2006","year":2006,"rating":6.6,"runtime":102,"genres":["Action","Crime","Drama","Thriller"],"like_count":54,"description_intro":"\"All they had to do was get across town.\" For aging NYPD detective Jack Mosley, this should've been his last assignment before a well-deserved retirement. The job was simple: transport Edward \"Eddie\" Bunker, a reluctant African-American witness, all the way to the New York State Supreme Court Building 16 blocks from the police department. Until it wasn't. Now Jack and Eddie are on the run from a group of corrupt and dirty cops, led by officer Frank Nugent, who will do anything in their power to stop them from reaching the Supreme Court. It's a race against time that may cost Jack everything he's devoted his job to.—jesusblack-91294","description_full":"\"All they had to do was get across town.\" For aging NYPD detective Jack Mosley, this should've been his last assignment before a well-deserved retirement. The job was simple: transport Edward \"Eddie\" Bunker, a reluctant African-American witness, all the way to the New York State Supreme Court Building 16 blocks from the police department. Until it wasn't. Now Jack and Eddie are on the run from a group of corrupt and dirty cops, led by officer Frank Nugent, who will do anything in their power to stop them from reaching the Supreme Court. It's a race against time that may cost Jack everything he's devoted his job to.—jesusblack-91294","yt_trailer_code":"55nKvGV0APA","language":"en","mpa_rating":"","background_image":"https://yts.lt/assets/images/movies/16_Blocks_2006/background.jpg","background_image_original":"https://yts.lt/assets/images/movies/16_Blocks_2006/background.jpg","small_cover_image":"https://yts.lt/assets/images/movies/16_Blocks_2006/small-cover.jpg","medium_cover_image":"https://yts.lt/assets/images/movies/16_Blocks_2006/medium-cover.jpg","large_cover_image":"https://yts.lt/assets/images/movies/16_Blocks_2006/large-cover.jpg","medium_screenshot_image1":"https://yts.lt/assets/images/movies/16_Blocks_2006/medium-screenshot1.jpg","medium_screenshot_image2":"https://yts.lt/assets/images/movies/16_Blocks_2006/medium-screenshot2.jpg","medium_screenshot_image3":"https://yts.lt/assets/images/movies/16_Blocks_2006/medium-screenshot3.jpg","large_screenshot_image1":"https://yts.lt/assets/images/movies/16_Blocks_2006/large-screenshot1.jpg","large_screenshot_image2":"https://yts.lt/assets/images/movies/16_Blocks_2006/large-screenshot2.jpg","large_screenshot_image3":"https://yts.lt/assets/images/movies/16_Blocks_2006/large-screenshot3.jpg","cast":[{"name":"Tom Wlaschiha","character_name":"Bus Passenger","url_small_image":"https://yts.lt/assets/images/actors/thumb/nm0937239.jpg","imdb_code":"0937239"},{"name":"Bruce Willis","character_name":"Det. Jack Mosley","url_small_image":"https://yts.lt/assets/images/actors/thumb/nm0000246.jpg","imdb_code":"0000246"},{"name":"Tig Fong","character_name":"Briggs","url_small_image":"https://yts.lt/assets/images/actors/thumb/nm0284609.jpg","imdb_code":"0284609"},{"name":"David Zayas","character_name":"Det. Robert Torres","url_small_image":"https://yts.lt/assets/images/actors/thumb/nm0953882.jpg","imdb_code":"0953882"}],"torrents":[{"url":"https://yts.lt/torrent/download/8619B57A3F39F1B49A1A698EA5400A883928C0A2?idruczs04SYr6Pgn4bvFHN_l-D4","hash":"8619B57A3F39F1B49A1A698EA5400A883928C0A2","quality":"720p","type":"bluray","is_repack":"0","video_codec":"x264","bit_depth":"8","audio_channels":"2.0","seeds":2,"peers":10,"size":"702.04 MB","size_bytes":736142295,"date_uploaded":"2015-10-31 20:47:35","date_uploaded_unix":1446320855},{"url":"https://yts.lt/torrent/download/2A4B9A41C92A20A06C8846E66AD9B5BC4B669BC6?idruczs04SYr6Pgn4bvFHN_l-D4","hash":"2A4B9A41C92A20A06C8846E66AD9B5BC4B669BC6","quality":"1080p","type":"bluray","is_repack":"0","video_codec":"x264","bit_depth":"8","audio_channels":"2.0","seeds":15,"peers":2,"size":"1.40 GB","size_bytes":1503238554,"date_uploaded":"2015-10-31 20:47:38","date_uploaded_unix":1446320858}],"date_uploaded":"2015-10-31 20:47:35","date_uploaded_unix":1446320855}}
+/// @meta : {"server_time":1764503293,"server_timezone":"CET","api_version":2,"execution_time":"0 ms"}
+
+class DetialsResponces {
+  DetialsResponces({
+      this.status, 
+      this.statusMessage, 
+      this.data, 
+      this.meta,});
+
+  DetialsResponces.fromJson(dynamic json) {
+    status = json['status'];
+    statusMessage = json['status_message'];
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    meta = json['@meta'] != null ? Meta.fromJson(json['@meta']) : null;
+  }
+  String? status;
+  String? statusMessage;
+  Data? data;
+  Meta? meta;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['status'] = status;
+    map['status_message'] = statusMessage;
+    if (data != null) {
+      map['data'] = data?.toJson();
+    }
+    if (meta != null) {
+      map['@meta'] = meta?.toJson();
+    }
+    return map;
+  }
+
+}
