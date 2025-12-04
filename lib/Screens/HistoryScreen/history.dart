@@ -14,43 +14,38 @@ class _HistoryScreenState extends State<HistoryScreen>
     {
       'title': 'Black Widow',
       'rating': 7.7,
-      'image': 'assets/movies/black_widow.jpg'
+      'image': 'assets/images/black_widow.png'
     },
-    {'title': 'Free Guy', 'rating': 7.7, 'image': 'assets/movies/free_guy.jpg'},
-    {'title': 'Tenet', 'rating': 7.7, 'image': 'assets/movies/tenet.jpg'},
-    {'title': 'Avengers', 'rating': 7.7, 'image': 'assets/movies/avengers.jpg'},
+    {'title': '', 'rating': 7.7, 'image': 'assets/images/fast_furious.png'},
+    {'title': '1917', 'rating': 7.7, 'image': 'assets/images/1917.png'},
+    {'title': 'Avengers', 'rating': 7.7, 'image': 'assets/images/avengers.png'},
     {
-      'title': 'Avengers Endgame',
+      'title': 'Godzilla',
       'rating': 7.7,
-      'image': 'assets/movies/endgame.jpg'
-    },
-    {
-      'title': 'Black Widow',
-      'rating': 7.7,
-      'image': 'assets/movies/black_widow2.jpg'
+      'image': 'assets/images/godzilla.png'
     },
     {
       'title': 'Black Panther',
       'rating': 7.7,
-      'image': 'assets/movies/black_panther.jpg'
+      'image': 'assets/images/black_panther.png'
     },
     {
-      'title': 'Wandavision',
+      'title': 'Iron Man3',
       'rating': 7.7,
-      'image': 'assets/movies/wandavision.jpg'
+      'image': 'assets/movies/iron_man3.png'
     },
     {
       'title': 'Doctor Who',
       'rating': 7.7,
-      'image': 'assets/movies/doctor_who.jpg'
+      'image': 'assets/images/doctor_who.png'
     },
-    {'title': 'Godzilla', 'rating': 7.7, 'image': 'assets/movies/godzilla.jpg'},
+
     {
       'title': 'Wednesday',
       'rating': 7.7,
-      'image': 'assets/movies/wednesday.jpg'
+      'image': 'assets/images/wednesday.png'
     },
-    {'title': 'Shazam', 'rating': 7.7, 'image': 'assets/movies/shazam.jpg'},
+
   ];
 
   @override

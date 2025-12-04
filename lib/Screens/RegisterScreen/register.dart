@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../ProfileScreen/profile.dart';
+import 'package:movies_app/Screens/LoginScreen/globals.dart';
+import 'package:movies_app/Screens/ProfileScreen/Profile.dart';
+import '../ProfileScreen/profile.dart' hide ProfileScreen;
 import '../user_database.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -161,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => ProfileScreen(),
+        builder: (context) => ProfileScreen(userData: userData),
       ),
     );
   }

@@ -40,7 +40,7 @@ class BottomNavBar extends StatelessWidget {
                 isActive: currentIndex == 1,
               ),
               _buildNavItem(
-                icon: Icons.bookmark,
+                icon: Icons.explore,
                 index: 2,
                 isActive: currentIndex == 2,
               ),
