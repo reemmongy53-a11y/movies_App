@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/Routes/route.dart';
-import 'package:movies_app/core/AppColor/color.dart';
-import 'package:movies_app/core/cach/shared_preferences.dart';
-import 'package:movies_app/customWidget/linear_gradient.dart';
-
+import '../../Routes/route.dart';
+import '../../core/AppColor/color.dart';
 import '../../core/AppImage/image.dart';
+import '../../core/cach/shared_preferences.dart';
 
 class OnBoarding extends StatefulWidget {
   OnBoarding({super.key});
@@ -35,7 +33,7 @@ class _OnBoardingState extends State<OnBoarding> {
     "Share your thoughts on the movies you've watched. Dive deep into film details and help others discover great movies with your reviews.",
     "",
   ];
-  List<linearGradient> Gradient = [
+   get Gradient => [
     linearGradient(
       startColor: AppColor.petrolBlue,
       endColor: AppColor.petrolBlue,
@@ -172,4 +170,6 @@ class _OnBoardingState extends State<OnBoarding> {
       ),
     );
   }
+
+  static linearGradient({required Color startColor, required Color endColor, required double startOpacity, required int endOpacity}) {}
 }

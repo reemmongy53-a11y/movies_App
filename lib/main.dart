@@ -8,17 +8,18 @@ import 'package:movies_app/Routes/route.dart';
 import 'package:movies_app/Screens/HomeScreen/Home.dart';
 import 'package:movies_app/Screens/OnBoarding Screen/onBoarding_screen.dart';
 import 'package:movies_app/Screens/OnBoarding Screen/onboardingPosters.dart';
-import 'package:movies_app/Screens/LogIn_Screen/logIn.dart';
-import 'package:movies_app/Screens/register.dart';
 
+
+import 'CustomWidgets/bottomTabs.dart';
 import 'Screens/BrowseScreen/Browse.dart';
+import 'Screens/LoginScreen/login.dart';
 import 'Screens/Movie Detials/Movie_Detials.dart';
 import 'Screens/ProfileScreen/Profile.dart';
+import 'Screens/RegisterScreen/register.dart';
 import 'Screens/SearchScreen/Search.dart';
 import 'core/cach/shared_preferences.dart';
 import 'core/AppTheme/Theme.dart' as AppTheme;
-import 'customWidget/bottomTabs.dart';
-import 'services/app_service.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
