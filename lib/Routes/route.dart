@@ -3,7 +3,11 @@ enum AppRoute{
   OnboardingPosters("onboardingPosters"),
   LogIn("logIn"),
   Home("home"),
-  register("register")
+  register("register"),
+  Search("search"),
+  Browse("browse"),
+  Profile("profile"),
+  Details("details"),
 
 ;
   final String routes;

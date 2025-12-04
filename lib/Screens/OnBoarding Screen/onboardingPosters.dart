@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/core/AppColor/color.dart';
-import 'package:movies_app/core/AppImage/image.dart';
-import 'package:movies_app/customWidget/linear_gradient.dart';
-
 import '../../Routes/route.dart';
+import '../../core/AppColor/color.dart';
+import '../../core/AppImage/image.dart';
 
 
 
@@ -39,4 +37,7 @@ class OnboardingPosters extends StatelessWidget {
       ),
     );
   }
+}
+
+linearGradient({required Color startColor, required Color primaryColor, required double primaryOpacity, required Color endColor, required double startOpacity, required int endOpacity}) {
 }
