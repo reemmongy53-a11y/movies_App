@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../ProfileScreen/profile.dart';
+import 'package:movies_app/Screens/LoginScreen/globals.dart';
+import 'package:movies_app/Screens/ProfileScreen/Profile.dart';
+import '../ProfileScreen/profile.dart' hide ProfileScreen;
 import '../RegisterScreen/register.dart';
 import '../user_database.dart';
 
@@ -53,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfileScreen(),
+          builder: (context) => ProfileScreen(userData:userData),
         ),
       );
     } else {
