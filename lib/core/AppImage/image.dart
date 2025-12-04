@@ -11,6 +11,15 @@ abstract class AppImage{
   static const String  avatar = "assets/images/avatar1.png";
   static const String  avatar2 = "assets/images/avatar2.png";
   static const String  avatar3 = "assets/images/avatar3.png";
+  static const String  Available = "assets/images/Available Now.png";
+  static const String Watch = "assets/images/Watch Now.png";
+  static const String  icon1 = "assets/images/Vector (4).svg";
+  static const String  icon2 = "assets/images/Vector (3).svg";
+  static const String  icon3 = "assets/images/explore.svg";
+  static const String  icon4 = "assets/images/Profiel.svg";
+  static const String  Details = "assets/images/Group 21.png";
+  static const String  search = "assets/images/d11758f1313f9aa162bc481e52e40dfc4512b9eb.png";
+
 
 
 
